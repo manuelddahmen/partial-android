@@ -1,0 +1,163 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'maven-publish'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+def kotlin_version = '2.0.0'
+def javaVersionEnum = JavaVersion.VERSION_21
+def javaVersion = "21"
+def code= 1
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+}
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaVersion))
+    }
+}
+
+//}
+//java {
+//    sourceCompatibility = javaVersionEnum
+//    targetCompatibility = javaVersionEnum
+//}
+
+
+
+android {
+    applicationId 'one.empty3.libs.partialandroid'
+    namespace "one.empty3.libs.partialandroid"
+
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\manue\\keystore_android_apps.jks')
+            storePassword 'faeeagrzdsd'
+            keyAlias 'featureapp4'
+            keyPassword 'faeeagrzdsd'
+        }
+        release {
+            storeFile file('C:\\Users\\manue\\keystore_android_apps.jks')
+            storePassword 'faeeagrzdsd'
+            keyAlias 'featureapp4'
+            keyPassword 'faeeagrzdsd'
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+//        compose true
+    }
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.5"
+    }
+    kotlin {
+
+        version '2.0.0'
+    }
+    lintOptions {
+        // Turns off checks for the issue IDs you specify.
+        disable("TypographyFractions")
+        disable("TypographyQuotes")
+        // Turns on checks for the issue IDs you specify. These checks are in
+        // addition to the default lint checks.
+        enable("RtlHardcoded")
+        enable("RtlCompat")
+        enable("RtlEnabled")
+        // To enable checks for only a subset of issue IDs and ignore all others,
+        // list the issue IDs with the 'check' property instead. This property overrides
+        // any issue IDs you enable or disable using the properties above.
+        checkOnly("NewApi", "InlinedApi")
+        // If set to true, turns off analysis progress reporting by lint.
+        quiet = true
+        // if set to true (default), stops the build if errors are found.
+        abortOnError = false
+        // if true, only report errors.
+        ignoreWarnings = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+        compose false
+        buildConfig true
+    }
+
+
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            debuggable false
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel = 'full'
+            }
+
+        }
+
+        debug {
+            debuggable true
+            //buildConfigField "Boolean", "DEBUG_MODE", "false"
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
+        }
+    }
+    defaultConfig {
+        vectorDrawables {
+            useSupportLibrary true
+        }
+        def filesAuthorityValue = applicationId + ".files"
+        // Creates a placeholder property to use in the manifest.
+        manifestPlaceholders["filesAuthority"] = filesAuthorityValue
+        // Adds a new field for the authority to the BuildConfig class.
+        buildConfigField("String",
+                "FILES_AUTHORITY",
+                "\"${filesAuthorityValue}\"")
+        applicationId 'one.empty3.libs.partialandroid'
+        testApplicationId = 'one.empty3.libs.partialandroid.test'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        targetSdk 34
+        compileSdk 35
+        compileSdkVersion 34
+        minSdk 26
+        versionCode code
+        versionName "8.1"
+        signingConfig signingConfigs.release
+    }
+}
+
