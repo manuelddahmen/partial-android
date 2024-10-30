@@ -3,7 +3,6 @@ package one.empty3.libs.partialandroid;
 import android.graphics.Color;
 public class Colors {
     private int color;
-
     public void setColor(int color) {
         this.color = color;
     }

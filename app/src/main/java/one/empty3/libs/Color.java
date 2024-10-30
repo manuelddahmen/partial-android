@@ -1,19 +1,57 @@
 package one.empty3.libs;
 
-import one.empty3.libs.partialdesktop.Colors;
+import one.empty3.libs.commons.IColorMp;
 
-public class Color {
-    private Colors color;
+public class Color extends android.graphics.Color implements IColorMp {
+    private android.graphics.Color colorObject;
 
-    public Color(Colors color) {
-        this.color = color;
+
+    public Color(android.graphics.Color color) {
+        this.colorObject = color;
     }
 
-    public Colors getColor() {
-        return color;
+    @Override
+    public Object getColorObject() {
+        return colorObject;
     }
 
-    public void setColor(Colors color) {
-        this.color = color;
+    public int getColor() {
+        return colorObject.toArgb();
+    }
+
+    @Override
+    public void setColor(int i) {
+
+    }
+
+    public void setColor(android.graphics.Color color) {
+        this.colorObject = color;
+    }
+
+    public void setRGB(int rgb) {
+        this.colorObject = android.graphics.Color.valueOf(rgb);
+    }
+
+    public void setRGB(int r, int g, int b) {
+        this.colorObject = android.graphics.Color.valueOf(r, g, b);
+    }
+
+    public void setRgb(int rgb) {
+        this.colorObject = android.graphics.Color.valueOf(rgb);
+    }
+    public int getRGB() {
+        return colorObject.toArgb();
+    }
+    public int getRed() {
+        return (int)(colorObject.red()/256);
+    }
+    public int getGreen() {
+        return (int)(colorObject.green()/256);
+    }
+    public int getBlue() {
+        return (int) (colorObject.blue() / 256);
+    }
+    public int getAlpha() {
+        return (int) (colorObject.alpha() / 256);
     }
 }

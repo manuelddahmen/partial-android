@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'java-library'
     id 'maven-publish'
     id 'org.jreleaser' version '1.14.0'
     id 'signing'
@@ -58,7 +57,7 @@ android {
         compileSdk 35
         minSdk 29
         versionCode code
-        versionName "0.0"
+        versionName "0.0.1"
     }
     publishing {
         singleVariant("release") {
@@ -89,7 +88,7 @@ try {
     ex.printStackTrace()
 }
 
-
+Properties load = properties
 
 
 tasks.register('copyDeps', Copy) {
@@ -102,14 +101,6 @@ tasks.register('copyDeps', Copy) {
     }
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 }
-jar {
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-}
-def load = properties
-java {
-    withSourcesJar()
-}
-
 
 signing {
     def signingKey = load.get("signing.keyId")
@@ -133,35 +124,6 @@ java {
 
 
 
-repositories {
-    google()
-    mavenCentral()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
-    maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
-    maven {
-        url = uri("https://repository.sonatype.org/content/groups/public/")
-    }
-    maven {
-        url = uri("https://mvnrepository.com/")
-    }
-    maven {
-        url = uri("https://maven.scijava.org/content/repositories/public/")
-    }
-    maven {
-        url = uri("https://plugins.gradle.org/m2/")
-    }
-    maven {
-        url "https://maven.jzy3d.org/releases/"
-    }
-    maven {
-        url "https://www.jetbrains.com/intellij-repository/releases"
-    }
-    flatDir dirs: "${rootDir}/lib"
-}
 
 
 
@@ -169,31 +131,16 @@ dependencies {
 
     implementation 'androidx.test.ext:junit:1.2.1'
     testImplementation 'junit:junit:4.13.2'
-    implementation "androidx.annotation:annotation:1.8.2"
-    implementation "androidx.annotation:annotation-jvm:1.8.2"
+    implementation "androidx.annotation:annotation:1.9.0"
+    implementation "androidx.annotation:annotation-jvm:1.9.0"
+    implementation "android.arch.core:common:1.1.1"
     // To use the Java-compatible @androidx.annotation.OptIn API annotation
     implementation "androidx.annotation:annotation-experimental:1.4.1"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'junit:junit:4.13.2'
-}
+    implementation group: 'one.empty3.libs', name: 'commmons-mp', version: '0.0.2'
 
-repositories {
-    google()
-    mavenCentral()
 }
-/*
-project.afterEvaluate {
-    publishing {
-        publications {
-            library(MavenPublication) {
-                setGroupId 'one.empty3.libs'
-                setArtifactId 'partialandroid'
-                version '0.1'
-                artifact 'partialandroid'
-            }
-        }
-    }
-}*/
 
 
 tasks.register('javadocJar', Jar) {
@@ -203,47 +150,6 @@ tasks.register('javadocJar', Jar) {
 }
 
 
-sourcesJar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.register('copyTask', Copy) {
-    // duplicateStrategy = DuplicatesStrategy.WARN
-    from 'src/main/java/'
-    into 'build/classes/java/main'
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
-tasks.named('jar') {
-    manifest {
-        attributes('Implementation-Title': project.name,
-                'Implementation-Version': project.version)
-    }
-}
-
-tasks.named("processTestResources") {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-tasks.named("processResources") {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-tasks.withType(Jar).configureEach {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-tasks.register("publishAll") {
-    dependsOn(getTasksByName("publishAllPublicationsToJetBrainsSpaceEmpty3Repository", true))
-    dependsOn(getTasksByName("publishAllPublicationsToOSSRHRepository", true))
-    dependsOn(getTasksByName("publishMavenPublicationToMavenLocal", true))
-}
-
 
 publishing {
     publications {
@@ -251,7 +157,6 @@ publishing {
             groupId = 'one.empty3.libs'
             artifactId = 'partial-android'
             version = '0.0.1'
-            from components.java
             project.tasks.withType(Sign) {
                 signatures.all {
 
@@ -263,7 +168,7 @@ publishing {
                 name = 'partial-android'
                 description = 'Adaptative class for Java Desktop/Android app . Android version'
                 packaging 'jar'
-                url = "https://github.com/manuelddahmen/partial-desktop"
+                url = "https://github.com/manuelddahmen/partial-android"
                 version '0.0.1'
                 inceptionYear = '2024'
                 licenses {
@@ -277,8 +182,8 @@ publishing {
                 scm {
 
                     url = "https://github.com/manuelddahmen/partial-android"
-                    connection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
-                    developerConnection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+                    connection = "scm:git:https://github.com/manuelddahmen/partial-desktop.git"
+                    developerConnection = "scm:git:https://github.com/manuelddahmen/partial-desktop.git"
 
                 }
                 developers {
@@ -296,42 +201,12 @@ publishing {
     }
 
     repositories {
-        /*  maven {
-              name = "JetBrainsSpaceEmpty3"
-              url = "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven/maven"
-              credentials {
-                  // Automation has a special account for authentication in Space
-                  // account credentials are accessible via env vars
-                  username = load.get("spaceUsername")
-                  password = load.get("spacePassword")
-              }
-
-          }*/
-        /*maven {
-            name = "OSSRH"
-            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = load.get("ossrhUsername")
-                password = load.get("ossrhPassword")
-            }
-
-        }*/
-/*
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/manuelddahmen/empty3_miror")
-            credentials {
-                username = load.get("GITHUB_ACTOR")
-                password = load.get("GITHUB_TOKEN")
-            }
-        }*/
         maven {
             url = layout.buildDirectory.dir('staging-deploy')
         }
 
     }
 }
-
 jreleaser {
     signing {
 
@@ -348,11 +223,11 @@ jreleaser {
         name = 'partial-android'
         java.artifactId = 'partial-android'
         java.groupId = 'one.empty3.libs'
-        java.version = '0.0.1'
-        version = '0.0.1'
+        java.version = '0.0.2'
+        version = '0.0.2'
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
-        description = 'Adaptative class for Java Desktop/Android app . Android version'
+        description = 'Adaptive class for Java Desktop/Android app . Android version'
         icon {
             // Publicly available URL. PNG format is preferred.
             //
@@ -404,7 +279,7 @@ jreleaser {
                     //
                     password = propertiesReleaseConfig.get('JRELEASER_MAVENCENTRAL_PASSWORD')
                     // List of directories where staged artifacts can be found.
-                    stagingRepository('build/staging-deploy')
+                    stagingRepository('target/staging-deploy')
 
                     // Defines the connection timeout in seconds.
                     // Defaults to `20`.
@@ -424,11 +299,11 @@ jreleaser {
                     // Registered publication namespace.
                     // Defaults to `${project.java.groupId}`.
                     //
-                    namespace = 'one.empty3'
+                    namespace = 'one.empty3.libs'
 
                     // Deployment identifier used for publication.
                     //
-                    deploymentId = 'd54226c8-5abd-4679-bc76-451c3ae38bfb'
+                    deploymentId = '242a09a3-285e-426f-a487-3c2287b079ad'
 
                     // Time to wait between state transition checks, in seconds.
                     // Defaults to `10`.

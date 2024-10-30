@@ -22,18 +22,217 @@ buildscript {
     }
 }
 plugins {
-    id 'org.springframework.boot' version '3.3.4'
-    id 'io.spring.dependency-management' version '1.1.6'
     id 'java-library'
     id 'maven-publish'
     id 'org.jreleaser' version '1.14.0'
     id 'signing'
-    //id 'org.jetbrains.kotlin.jvm' version '1.9.24'
 }
 def kotlin_version = '2.0.0'
 
 
+Properties properties = new Properties()
+try {
+    // Other configuration here
+    File propertiesFile = new File('../private.properties/gradle.properties')
+    propertiesFile.withInputStream {
+        properties.load(it)
+    }
+} catch (Exception ex) {
+    ex.printStackTrace()
+}
 
-repositories {
-    google()
+
+Properties propertiesReleaseConfig = new Properties()
+try {
+    // Other configuration here
+    File propertiesFile = new File('C:\\Users\\manue\\.jreleaser\\config.properties')
+    propertiesFile.withInputStream {
+        propertiesReleaseConfig.load(it)
+    }
+} catch (Exception ex) {
+    ex.printStackTrace()
+}
+
+
+def load = properties
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'one.empty3.libs'
+            artifactId = 'partial-android'
+            version = '0.1'
+            from components.java
+            project.tasks.withType(Sign) {
+                signatures.all {
+
+                }
+            }
+
+            // The pom can be enriched as usual
+            pom {
+                name = 'partial-android'
+                description = 'Adaptative class for Java Desktop/Android app . Android version'
+                packaging 'jar'
+                url = "https://github.com/manuelddahmen/partial-android"
+                version '2024.9.2'
+                inceptionYear = '2024'
+                licenses {
+                    license {
+                        name = "Apache version 2"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
+                    }
+                }
+
+                scm {
+
+                    url = "https://github.com/manuelddahmen/partial-android"
+                    connection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+                    developerConnection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+
+                }
+                developers {
+                    developer {
+                        email = "manuel.dahmen@gmx.com"
+                        name = "Manuel Daniel Dahmen"
+
+                        url = "https://empty3.one"
+                        id = "manuelddahmen"
+                    }
+                }
+
+            }
+
+        }
+    }
+
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+
+    }
+}
+
+
+jreleaser {
+    signing {
+
+        active = 'ALWAYS'
+        armored = true
+        mode = 'FILE'
+        publicKey = load.get('signing.publicKeyPath')
+        passphrase = load.get('signing.passphrase')
+        secretKey = load.get('signing.secretKey')
+        release.github.token = load.get('release.github.token')
+
+    }
+    project {
+        name = 'partial-adnroid'
+        java.artifactId = 'partial-adnroid'
+        java.groupId = 'one.empty3.libs'
+        java.version = '0.0.1'
+        version = '0.0.1'
+        license = 'Apache-2.0'
+        authors = ['Manuel D DAHMEN']
+        description = 'Adaptative class for Java Desktop/Android app . Desktop version'
+        icon {
+            // Publicly available URL. PNG format is preferred.
+            //
+            url = 'https://empty3.one/favicon.ico'
+            // Marks this icon as the primary one.
+            // Only a single icon may be set as primary.
+            //
+            primary = true
+            // Image width in pixels.
+            //
+            width = 47
+            // Image height in pixels.
+            //
+            height = 47
+        }
+    }
+
+    deploy {
+        maven {
+            // Enable or disable all configured deployers.
+            // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+            // Defaults to `ALWAYS`.
+            //
+            active = 'ALWAYS'
+            pomchecker {
+                // Defines the tool version to use.
+                //
+                version = '1.11.0'
+
+                // Fail the release if pomchecker outputs a warning.
+                // Defaults to `true`.
+                //
+                failOnWarning = false
+
+                // Fail the release if pomchecker outputs an error.
+                // Defaults to `true`.
+                //
+                failOnError = false
+            }
+            mavenCentral {
+                app {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    gitRootSearch = false
+                    stagingRepository('build/staging-deploy')
+                    username = propertiesReleaseConfig.get('JRELEASER_MAVENCENTRAL_USERNAME')
+                    authorization = 'BASIC'
+                    // Password for login into the MAVENCENTRAL service.
+                    //
+                    password = propertiesReleaseConfig.get('JRELEASER_MAVENCENTRAL_PASSWORD')
+                    // List of directories where staged artifacts can be found.
+                    stagingRepository('target/staging-deploy')
+
+                    // Defines the connection timeout in seconds.
+                    // Defaults to `20`.
+                    //
+                    connectTimeout = 20
+
+                    // Defines the read timeout in seconds.
+                    // Defaults to `60`.
+                    //
+                    readTimeout = 60
+
+                    // Additional properties used when evaluating templates.
+                    // Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
+                    //
+                    extraProperties.put('foo', 'bar')
+
+                    // Registered publication namespace.
+                    // Defaults to `${project.java.groupId}`.
+                    //
+                    namespace = 'one.empty3.libs'
+
+                    // Deployment identifier used for publication.
+                    //
+                    deploymentId = '242a09a3-285e-426f-a487-3c2287b079ad'
+
+                    // Time to wait between state transition checks, in seconds.
+                    // Defaults to `10`.
+                    //
+                    retryDelay = 10
+
+                    // Maximum number of attempts to verify state transition.
+                    // Defaults to `60`.
+                    //
+                    maxRetries = 60
+                }
+            }
+        }
+    }
+    upload {
+        // Enable or disable all configured uploaders.
+        // Supported values are [`NEVER`, `ALWAYS`, `RELEASE`, `SNAPSHOT`].
+        // Defaults to `ALWAYS`.
+        //
+        active = 'ALWAYS'
+    }
 }
