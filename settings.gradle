@@ -1,39 +1,26 @@
 pluginManagement {
+
+    /**
+     * The pluginManagement.repositories block configures the
+     * repositories Gradle uses to search or download the Gradle plugins and
+     * their transitive dependencies. Gradle pre-configures support for remote
+     * repositories such as JCenter, Maven Central, and Ivy. You can also use
+     * local repositories or define your own remote repositories. Here we
+     * define the Gradle Plugin Portal, Google's Maven repository,
+     * and the Maven Central Repository as the repositories Gradle should use to look for its
+     * dependencies.
+     */
+
     repositories {
         gradlePluginPortal()
         google()
-        maven {
-            url 'https://developer.huawei.com/repo/'
-        }
         mavenCentral()
-        maven {
-            url "https://jitpack.io"
-        }
-        maven {
-            url "https://mvnrepository.com/"
-        }
-        mavenLocal()
-    }
-    plugins {
-        // To benefit from the latest Performance Monitoring plugin features,
-        // update your Android Gradle plugin dependency to at least v3.4.0
-        id 'com.android.application' version '7.2.0' apply false
-
-        // Make sure that you have the Google services Gradle plugin dependency
-        id 'com.google.gms.google-services' version '4.3.15' apply false
-
-        // Add the dependency for the Performance Monitoring Gradle plugin
-        id 'com.google.firebase.firebase-perf' version '1.4.2' apply false
-
-        // Add the dependency for the Crashlytics Gradle plugin
-        id("com.google.firebase.crashlytics") version "2.9.9" apply false
-        id 'org.jetbrains.kotlin.android' version '1.9.21'
     }
 }
 dependencyResolutionManagement {
 
     /**
-     * The dependencyResolutionManagement {repositories {...}}
+     * The dependencyResolutionManagement.repositories
      * block is where you configure the repositories and dependencies used by
      * all modules in your project, such as libraries that you are using to
      * create your application. However, you should configure module-specific
@@ -46,19 +33,8 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
-        maven {
-            url 'https://developer.huawei.com/repo/'
-        }
         mavenCentral()
-        maven {
-            url "https://jitpack.io"
-        }
-        maven {
-            url "https://mvnrepository.com/"
-        }
-        mavenLocal()
     }
 }
-
 rootProject.name = 'partial-android'
 include ':app'

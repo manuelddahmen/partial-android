@@ -21,6 +21,8 @@ buildscript {
         classpath 'com.huawei.agconnect:agcp:1.5.2.300'
     }
 }
+
+
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -29,7 +31,27 @@ plugins {
 }
 def kotlin_version = '2.0.0'
 
+/*
 
+dependencies {
+// https://mvnrepository.com/artifact/androidx.core/core-ktx
+    runtimeOnly group: 'androidx.core', name: 'core-ktx', version: '1.15.0'
+
+    runtimeOnly 'androidx.test:core:1.5.0'
+    runtimeOnly 'androidx.test:monitor:1.6.1'
+    testImplementation 'junit:junit:4.13.2'
+    runtimeOnly "androidx.annotation:annotation-experimental-lint:1.0.0"
+    runtimeOnly "androidx.arch.core:core-common:2.2.0"
+    runtimeOnly "androidx.test:annotation:1.0.0"
+    runtimeOnly "androidx.tracing:tracing:1.2.0"
+    // To use the Java-compatible @androidx.annotation.OptIn API annotation
+    runtimeOnly "androidx.annotation:annotation-experimental-lint:1.0.0"
+    testImplementation 'junit:junit:4.13.2'
+    implementation group: 'one.empty3.libs', name: 'commmons-mp', version: '0.0.2'
+
+}
+
+ */
 Properties properties = new Properties()
 try {
     // Other configuration here
@@ -53,15 +75,36 @@ try {
     ex.printStackTrace()
 }
 
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier = "javadoc"
+    from javadoc.destinationDir
+}
+
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 def load = properties
+signing {
+    def signingKey = load.get("signing.keyId")
+    def signingPassword = load.get("signing.password")
+
+    useGpgCmd()
+
+
+    sign publishing.publications
+    sign configurations.archives
+}
 
 publishing {
     publications {
         release(MavenPublication) {
             groupId = 'one.empty3.libs'
             artifactId = 'partial-android'
-            version = '0.1'
+            version = '0.0.2'
             from components.java
             project.tasks.withType(Sign) {
                 signatures.all {
@@ -133,8 +176,8 @@ jreleaser {
         name = 'partial-adnroid'
         java.artifactId = 'partial-adnroid'
         java.groupId = 'one.empty3.libs'
-        java.version = '0.0.1'
-        version = '0.0.1'
+        java.version = '0.0.2'
+        version = '0.0.2'
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
         description = 'Adaptative class for Java Desktop/Android app . Desktop version'
@@ -201,11 +244,6 @@ jreleaser {
                     //
                     readTimeout = 60
 
-                    // Additional properties used when evaluating templates.
-                    // Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
-                    //
-                    extraProperties.put('foo', 'bar')
-
                     // Registered publication namespace.
                     // Defaults to `${project.java.groupId}`.
                     //
@@ -235,4 +273,8 @@ jreleaser {
         //
         active = 'ALWAYS'
     }
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }

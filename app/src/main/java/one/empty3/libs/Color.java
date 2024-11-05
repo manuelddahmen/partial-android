@@ -19,9 +19,8 @@ public class Color extends android.graphics.Color implements IColorMp {
         return colorObject.toArgb();
     }
 
-    @Override
     public void setColor(int i) {
-
+        setRGB(i);
     }
 
     public void setColor(android.graphics.Color color) {
