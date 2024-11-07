@@ -11,8 +11,11 @@ public class Color extends android.graphics.Color implements IColorMp {
     }
 
     @Override
-    public Object getColorObject() {
-        return colorObject;
+    public IColorMp getColorObject() {
+        if(colorObject instanceof Color)
+            return (Color)colorObject;
+        else
+            return new Color(colorObject);
     }
 
     public int getColor() {
