@@ -1,7 +1,6 @@
 plugins {
-    id("application") // enabling the plugin here
-    id("java")
-    id 'java-library'
+    id("com.android.application") version "8.6.1" apply false
+    id("com.android.library") version "8.6.1" apply false
     id 'maven-publish'
     id 'org.jreleaser' version '1.14.0'
     id 'signing'
@@ -115,8 +114,8 @@ repositories {
 //}
 
 android {
-    namespace 'one.empty3.libs'
-    compileSdk 35
+    namespace 'one.empty3.libs.partialandroid'
+    compileSdk 34
     defaultConfig {
         aarMetadata {
             minCompileSdk = 29
@@ -164,7 +163,7 @@ android {
         compileSdk 35
         minSdk 29
         versionCode code
-        versionName "0.0.5"
+        versionName "0.0.3"
     }
     publishing {
         singleVariant("release") {
@@ -222,7 +221,7 @@ signing {
 }
 
 group = 'one.empty3.libs'
-version = '0.0.5'
+version = '0.0.3'
 
 
 
@@ -298,7 +297,7 @@ dependencies {
     // To use the Java-compatible @androidx.annotation.OptIn API annotation
     implementation "androidx.annotation:annotation-experimental:1.4.1"
     implementation 'junit:junit:4.13.2'
-    implementation group: 'one.empty3.libs', name: 'commons-mp', version: '0.0.4'
+    implementation group: 'one.empty3.libs', name: 'commmons-mp', version: '0.0.3'
 
 }
 
@@ -319,7 +318,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'one.empty3.libs'
             artifactId = 'partial-android'
-            version = '0.0.5'
+            version = '0.0.3'
             project.tasks.withType(Sign) {
                 signatures.all {
 
@@ -332,7 +331,7 @@ publishing {
                 description = 'Adaptative class for Java Desktop/Android app . Android version'
                 packaging 'jar'
                 url = "https://github.com/manuelddahmen/partial-android"
-                version '0.0.5'
+                version '0.0.3'
                 inceptionYear = '2024'
                 licenses {
                     license {
@@ -449,8 +448,8 @@ jreleaser {
         name = 'partial-android'
         java.artifactId = 'partial-android'
         java.groupId = 'one.empty3.libs'
-        java.version = '0.0.5'
-        version = '0.0.5'
+        java.version = '0.0.3'
+        version = '0.0.3'
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
         description = 'Adaptive class for Java Desktop/Android app . Android version'
