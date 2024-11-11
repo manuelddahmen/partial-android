@@ -1,5 +1,8 @@
 package one.empty3.libs.partialandroid;
 
+import android.graphics.Paint;
+import android.graphics.Canvas;
+
 import android.graphics.Color;
 public class Colors {
     private int color;
