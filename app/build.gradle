@@ -1,12 +1,118 @@
 plugins {
-    ///id("com.android.application")
-    id("com.android.library")
+    id("application") // enabling the plugin here
+    id("java")
+    id 'java-library'
     id 'maven-publish'
-    id 'org.jreleaser'
+    id 'org.jreleaser' version '1.14.0'
     id 'signing'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.24'
 }
 
 def code=1000000
+
+kotlin {
+    jvmToolchain(21)
+}
+sourceCompatibility = 21
+targetCompatibility = 21
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+configurations {
+    desktopCompile
+    androidCompile
+    testCompile
+
+    compileOnly.extendsFrom desktopCompile
+    testOnly.extendsFrom desktopCompile
+
+    desktop {
+        extendsFrom desktopCompile
+//        extendsFrom runtime
+    }
+    android {
+        extendsFrom androidCompile
+//        extendsFrom runtime
+    }
+    test {
+        extendsFrom testCompile
+
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java'
+            srcDirs 'src/test/java'
+        }
+        resources {
+            srcDirs "src/main/resources", "src/main/configs", "src/main/java"
+        }
+    }
+    test {
+        java {
+            srcDirs 'src/test/java'
+            srcDirs 'src/main/java'
+        }
+        resources {
+            srcDirs "src/test/resources", "src/test/configs", "src/test/java"
+        }
+        mainClasses {
+            "one.empty3.library1.tree.TestStringAnalyzer5"
+            "one.empty3.library1.tree.TestStringAnalyzer7"
+            "one.empty3.library1.tree.TestAlgebraicTreeVector"
+        }
+    }
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.kotlin.srcDirs += 'src/main/java'
+    test.kotlin.srcDirs += 'test/main/kotlin'
+    test.kotlin.srcDirs += 'test/main/java'
+    test.java.srcDirs += 'src/test/java'
+    test.java.srcDirs += 'src/main/java'
+}
+
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = uri("https://repo.maven.apache.org/maven2/")
+    }
+    maven {
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
+    maven {
+        url = uri("https://repository.sonatype.org/content/groups/public/")
+    }
+    maven {
+        url = uri("https://mvnrepository.com/")
+    }
+    maven {
+        url = uri("https://maven.scijava.org/content/repositories/public/")
+    }
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
+    maven {
+        url "https://maven.jzy3d.org/releases/"
+    }
+    maven {
+        url "https://www.jetbrains.com/intellij-repository/releases"
+    }
+    flatDir dirs: "${rootDir}/lib"
+}
+
+//kotlin {
+//macosX64('native') { // on macOS
+// linuxX64('native') // on Linux
+//    mingwX64('native') // on Windows
+//        binaries {
+//            executable()
+//        }
+//}
 
 android {
     namespace 'one.empty3.libs'
@@ -66,6 +172,7 @@ android {
         }
     }
 }
+
 Properties properties = new Properties()
 try {
     // Other configuration here
@@ -92,16 +199,16 @@ try {
 Properties load = properties
 
 
-tasks.register('copyDeps', Copy) {
-    from(configurations.compile + configurations.testCompile) {
-        include "**/*.jar"
-        include "**/*.xml"
-        include "**/*.properties"
-        include "**/*.dll"
-        include "**/*.so"
-    }
-    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-}
+//tasks.register('copyDeps', Copy) {
+//    from(configurations.compile + configurations.testCompile) {
+//        include "**/*.jar"
+//        include "**/*.xml"
+//        include "**/*.properties"
+//        include "**/*.dll"
+//        include "**/*.so"
+//    }
+//    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+//}
 
 signing {
     def signingKey = load.get("signing.keyId")
@@ -117,6 +224,36 @@ signing {
 group = 'one.empty3.libs'
 version = '0.0.5'
 
+
+
+kotlin {
+    jvmToolchain(21)
+}
+sourceCompatibility = 21
+targetCompatibility = 21
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+configurations {
+    desktopCompile
+    androidCompile
+
+    compileOnly.extendsFrom desktopCompile
+    testCompile.extendsFrom desktopCompile // Assuming tests run on the desktop
+
+    desktop {
+        extendsFrom desktopCompile
+        //extendsFrom runtime
+    }
+    android {
+        extendsFrom androidCompile
+        //extendsFrom runtime
+    }
+}
+
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -125,17 +262,23 @@ java {
 
 
 
+tasks.register('copyTask', Copy) {
+    // duplicateStrategy = DuplicatesStrategy.WARN
+    from 'app/src/main/java/'
+    into 'build/classes/java/main'
+}
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
-
-
-
-
+/*
 tasks.register('javadocJar', Jar) {
     dependsOn javadoc
     archiveClassifier = "javadoc"
     from javadoc.destinationDir
 }
-
+*/
 
 dependencies {
     implementation "androidx.tracing:tracing:1.2.0"
@@ -158,6 +301,18 @@ dependencies {
     implementation group: 'one.empty3.libs', name: 'commons-mp', version: '0.0.4'
 
 }
+
+signing {
+    def signingKey = load.get("signing.keyId")
+    def signingPassword = load.get("signing.password")
+
+    useGpgCmd()
+
+
+    sign publishing.publications
+    sign configurations.archives
+}
+
 
 publishing {
     publications {
@@ -215,6 +370,69 @@ publishing {
 
     }
 }
+
+
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'one.empty3.libs'
+            artifactId = 'partial-android'
+            version = '0.0.5'
+            from components.java
+            project.tasks.withType(Sign) {
+                signatures.all {
+
+                }
+            }
+
+            // The pom can be enriched as usual
+            pom {
+                name = 'partial-android'
+                description = 'Adaptative class for Java Desktop/Android app . Android version'
+                packaging 'jar'
+                url = "https://github.com/manuelddahmen/partial-android"
+                version '0.0.5'
+                inceptionYear = '2024'
+                licenses {
+                    license {
+                        name = "Apache version 2"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
+                    }
+                }
+
+                scm {
+
+                    url = "https://github.com/manuelddahmen/partial-android"
+                    connection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+                    developerConnection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+
+                }
+                developers {
+                    developer {
+                        email = "manuel.dahmen@gmx.com"
+                        name = "Manuel Daniel Dahmen"
+
+                        url = "https://empty3.one"
+                        id = "manuelddahmen"
+                    }
+                }
+
+            }
+
+        }
+    }
+
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+
+    }
+}
+
 jreleaser {
     signing {
 

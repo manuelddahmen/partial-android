@@ -1,34 +1,58 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+
+
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
-        // Add the Maven address.
-        maven { url 'https://developer.huawei.com/repo/' }
-        dependencies {
-            // Add dependencies.
-            classpath 'com.google.gms:google-services:4.4.2'    //classpath 'com.huawei.agconnect:agcp:1.5.2.300'
+        maven {
+            url = uri("https://repo.maven.apache.org/maven2/")
         }
-
-
+        maven {
+            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        }
+        maven {
+            url = uri("https://repository.sonatype.org/content/groups/public/")
+        }
+        maven {
+            url = uri("https://mvnrepository.com/")
+        }
+        maven {
+            url = uri("https://maven.scijava.org/content/repositories/public/")
+        }
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+        maven {
+            url "https://maven.jzy3d.org/releases/"
+        }
+        maven {
+            url "https://www.jetbrains.com/intellij-repository/releases"
+        }
+        flatDir dirs: "${rootDir}/lib"
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:8.5.2'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
         classpath 'com.google.gms:google-services:4.4.2'
-        classpath 'com.huawei.agconnect:agconnect-core:1.5.2.300'
-        classpath 'com.huawei.agconnect:agcp:1.5.2.300'
+        //classpath 'com.huawei.agconnect:agconnect-core:1.5.2.300'
+        //classpath 'com.huawei.agconnect:agcp:1.5.2.300'
     }
 }
 
 
+
 plugins {
+    id("application") // enabling the plugin here
+    id("java")
     id 'java-library'
     id 'maven-publish'
     id 'org.jreleaser' version '1.14.0'
     id 'signing'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.24'
 }
+
 def kotlin_version = '2.0.0'
 
 
@@ -57,11 +81,205 @@ try {
     ex.printStackTrace()
 }
 
+tasks.register('copyTask', Copy) {
+    // duplicateStrategy = DuplicatesStrategy.WARN
+    from 'src/main/java/'
+    into 'build/classes/java/main'
+}
 tasks.register('javadocJar', Jar) {
     dependsOn javadoc
     archiveClassifier = "javadoc"
     from javadoc.destinationDir
 }
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+configurations {
+    desktopCompile
+    androidCompile
+    testCompile
+
+    compileOnly.extendsFrom desktopCompile
+    testOnly.extendsFrom desktopCompile
+
+    desktop {
+        extendsFrom desktopCompile
+//        extendsFrom runtime
+    }
+    android {
+        extendsFrom androidCompile
+//        extendsFrom runtime
+    }
+    test {
+        extendsFrom testCompile
+
+    }
+}
+
+
+def code=1000000
+
+kotlin {
+    jvmToolchain(21)
+}
+sourceCompatibility = 21
+targetCompatibility = 21
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+configurations {
+    desktopCompile
+    androidCompile
+    testCompile
+
+    compileOnly.extendsFrom desktopCompile
+    testOnly.extendsFrom desktopCompile
+
+    desktop {
+        extendsFrom desktopCompile
+//        extendsFrom runtime
+    }
+    android {
+        extendsFrom androidCompile
+//        extendsFrom runtime
+    }
+    test {
+        extendsFrom testCompile
+
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java'
+            srcDirs 'src/test/java'
+        }
+        resources {
+            srcDirs "src/main/resources", "src/main/configs", "src/main/java"
+        }
+    }
+    test {
+        java {
+            srcDirs 'src/test/java'
+            srcDirs 'src/main/java'
+        }
+        resources {
+            srcDirs "src/test/resources", "src/test/configs", "src/test/java"
+        }
+        mainClasses {
+            "one.empty3.library1.tree.TestStringAnalyzer5"
+            "one.empty3.library1.tree.TestStringAnalyzer7"
+            "one.empty3.library1.tree.TestAlgebraicTreeVector"
+        }
+    }
+    main.kotlin.srcDirs += 'src/main/kotlin'
+    main.kotlin.srcDirs += 'src/main/java'
+    test.kotlin.srcDirs += 'test/main/kotlin'
+    test.kotlin.srcDirs += 'test/main/java'
+    test.java.srcDirs += 'src/test/java'
+    test.java.srcDirs += 'src/main/java'
+}
+
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = uri("https://repo.maven.apache.org/maven2/")
+    }
+    maven {
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
+    maven {
+        url = uri("https://repository.sonatype.org/content/groups/public/")
+    }
+    maven {
+        url = uri("https://mvnrepository.com/")
+    }
+    maven {
+        url = uri("https://maven.scijava.org/content/repositories/public/")
+    }
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
+    maven {
+        url "https://maven.jzy3d.org/releases/"
+    }
+    maven {
+        url "https://www.jetbrains.com/intellij-repository/releases"
+    }
+    flatDir dirs: "${rootDir}/lib"
+}
+
+Properties load = properties
+
+
+//tasks.register('copyDeps', Copy) {
+//    from(configurations.compile + configurations.testCompile) {
+//        include "**/*.jar"
+//        include "**/*.xml"
+//        include "**/*.properties"
+//        include "**/*.dll"
+//        include "**/*.so"
+//    }
+//    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+//}
+
+signing {
+    def signingKey = load.get("signing.keyId")
+    def signingPassword = load.get("signing.password")
+
+    useGpgCmd()
+    //useInMemoryPgpKeys(signingKey, signingPassword)
+
+    sign publishing.publications
+    sign configurations.archives
+}
+
+group = 'one.empty3.libs'
+version = '0.0.5'
+
+
+
+kotlin {
+    jvmToolchain(21)
+}
+sourceCompatibility = 21
+targetCompatibility = 21
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+configurations {
+    desktopCompile
+    androidCompile
+
+    compileOnly.extendsFrom desktopCompile
+    testCompile.extendsFrom desktopCompile // Assuming tests run on the desktop
+
+    desktop {
+        extendsFrom desktopCompile
+        //extendsFrom runtime
+    }
+    android {
+        extendsFrom androidCompile
+        //extendsFrom runtime
+    }
+}
+
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 
 
 java {
@@ -69,7 +287,36 @@ java {
     withSourcesJar()
 }
 
-def load = properties
+/*
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
+    archiveClassifier = "javadoc"
+    from javadoc.destinationDir
+}
+*/
+
+dependencies {
+    implementation "androidx.tracing:tracing:1.2.0"
+    implementation "androidx.test:core:1.6.1"
+    implementation "androidx.test:monitor:1.7.2"
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.work:work-runtime-ktx:2.10.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation "androidx.annotation:annotation:1.9.1"
+    implementation "androidx.annotation:annotation-jvm:1.9.1"
+    implementation "android.arch.core:common:1.1.1"
+    // To use the Java-compatible @androidx.annotation.OptIn API annotation
+    implementation "androidx.annotation:annotation-experimental:1.4.1"
+    implementation 'junit:junit:4.13.2'
+    implementation group: 'one.empty3.libs', name: 'commons-mp', version: '0.0.4'
+
+}
+
 signing {
     def signingKey = load.get("signing.keyId")
     def signingPassword = load.get("signing.password")
@@ -80,6 +327,66 @@ signing {
     sign publishing.publications
     sign configurations.archives
 }
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'one.empty3.libs'
+            artifactId = 'partial-android'
+            version = '0.0.5'
+            project.tasks.withType(Sign) {
+                signatures.all {
+
+                }
+            }
+
+            // The pom can be enriched as usual
+            pom {
+                name = 'partial-android'
+                description = 'Adaptative class for Java Desktop/Android app . Android version'
+                packaging 'jar'
+                url = "https://github.com/manuelddahmen/partial-android"
+                version '0.0.5'
+                inceptionYear = '2024'
+                licenses {
+                    license {
+                        name = "Apache version 2"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
+                    }
+                }
+
+                scm {
+
+                    url = "https://github.com/manuelddahmen/partial-android"
+                    connection = "scm:git:https://github.com/manuelddahmen/partial-desktop.git"
+                    developerConnection = "scm:git:https://github.com/manuelddahmen/partial-desktop.git"
+
+                }
+                developers {
+                    developer {
+                        email = "manuel.dahmen@gmx.com"
+                        name = "Manuel Daniel Dahmen"
+
+                        url = "https://empty3.one"
+                        id = "manuelddahmen"
+                    }
+                }
+
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+
+    }
+}
+
+
 
 publishing {
     publications {
@@ -141,7 +448,6 @@ publishing {
     }
 }
 
-
 jreleaser {
     signing {
 
@@ -155,14 +461,14 @@ jreleaser {
 
     }
     project {
-        name = 'partial-adnroid'
-        java.artifactId = 'partial-adnroid'
+        name = 'partial-android'
+        java.artifactId = 'partial-android'
         java.groupId = 'one.empty3.libs'
         java.version = '0.0.5'
         version = '0.0.5'
         license = 'Apache-2.0'
         authors = ['Manuel D DAHMEN']
-        description = 'Adaptative class for Java Desktop/Android app . Desktop version'
+        description = 'Adaptive class for Java Desktop/Android app . Android version'
         icon {
             // Publicly available URL. PNG format is preferred.
             //
@@ -226,6 +532,11 @@ jreleaser {
                     //
                     readTimeout = 60
 
+                    // Additional properties used when evaluating templates.
+                    // Key will be capitalized and prefixed with `mavenCentral`, i.e, `mavenCentralFoo`.
+                    //
+                    extraProperties.put('foo', 'bar')
+
                     // Registered publication namespace.
                     // Defaults to `${project.java.groupId}`.
                     //
@@ -255,8 +566,4 @@ jreleaser {
         //
         active = 'ALWAYS'
     }
-}
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
 }
