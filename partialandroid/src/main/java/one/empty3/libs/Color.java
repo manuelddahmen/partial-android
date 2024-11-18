@@ -42,15 +42,15 @@ public class Color extends android.graphics.Color implements IColorMp {
         return colorObject.toArgb();
     }
     public int getRed() {
-        return (int)(colorObject.red()/256);
+        return (int)(colorObject.red()*255);
     }
     public int getGreen() {
-        return (int)(colorObject.green()/256);
+        return (int)(colorObject.green()*255);
     }
     public int getBlue() {
-        return (int) (colorObject.blue() / 256);
+        return (int) (colorObject.blue() * 255);
     }
     public int getAlpha() {
-        return (int) (colorObject.alpha() / 256);
+        return (int) (colorObject.alpha() * 255);
     }
 }
