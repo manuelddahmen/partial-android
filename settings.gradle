@@ -10,38 +10,31 @@ pluginManagement {
      * and the Maven Central Repository as the repositories Gradle should use to look for its
      * dependencies.
      */
-
-/*
     repositories {
+        gradlePluginPortal()
         google()
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
         mavenCentral()
-        maven {
-            url = uri("https://repo.maven.apache.org/maven2/")
-        }
-        maven {
-            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-        }
-        maven {
-            url = uri("https://repository.sonatype.org/content/groups/public/")
-        }
-        maven {
-            url = uri("https://mvnrepository.com/")
-        }
-        maven {
-            url = uri("https://maven.scijava.org/content/repositories/public/")
-        }
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
-        maven {
-            url "https://maven.jzy3d.org/releases/"
-        }
+        mavenLocal()
         maven {
             url "https://www.jetbrains.com/intellij-repository/releases"
         }
-        flatDir dirs: "${rootDir}/lib"
+        maven {
+            url "https://repo1.maven.org/maven2/"
+        }
+        maven {
+            url "https://repo.maven.apache.org/maven2/"
+        }
+        flatDir {
+            dirs "libs"
+        }
+        maven {
+            url "https://mvnrepository.com/"
+        }
     }
-*/
+
 }
 dependencyResolutionManagement {
 
@@ -56,38 +49,23 @@ dependencyResolutionManagement {
      * you select a template that requires some).
      */
 
-    //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-/*
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        gradlePluginPortal()
+        mavenCentral()
         google()
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
         mavenCentral()
         maven {
-            url = uri("https://repo.maven.apache.org/maven2/")
+            url "https://jitpack.io"
         }
         maven {
-            url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            url "https://mvnrepository.com/"
         }
-        maven {
-            url = uri("https://repository.sonatype.org/content/groups/public/")
-        }
-        maven {
-            url = uri("https://mvnrepository.com/")
-        }
-        maven {
-            url = uri("https://maven.scijava.org/content/repositories/public/")
-        }
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
-        maven {
-            url "https://maven.jzy3d.org/releases/"
-        }
-        maven {
-            url "https://www.jetbrains.com/intellij-repository/releases"
-        }
-        flatDir dirs: "${rootDir}/lib"
+        mavenLocal()
     }
-*/
 }
-rootProject.name = 'partial-android'
-//include ':app'
+rootProject.name = 'partialandroid'
+include ':partialandroid'
