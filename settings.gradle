@@ -67,5 +67,5 @@ dependencyResolutionManagement {
         mavenLocal()
     }
 }
-rootProject.name = 'partialandroid'
-include ':partialandroid'
+rootProject.name = 'partial-android'
+include ':partial-android'
