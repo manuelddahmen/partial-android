@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+
+        <TextView android:id="@+id/consent_title" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="Consent to Data Collection"
+            android:textSize="20sp" android:textStyle="bold" />
+
+        <TextView android:id="@+id/consent_text" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="16dp"
+            android:text="We collect data to improve your experience. This includes..." />
+
+        <CheckBox android:id="@+id/consent_checkbox_analytics" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="16dp"
+            android:text="Consent to Analytics" />
+
+        <CheckBox android:id="@+id/consent_checkbox_personalized_ads"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:text="Consent to Personalized Ads" />
+
+        <Button android:id="@+id/consent_accept_button" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="24dp"
+            android:text="Accept" />
+
+        <Button android:id="@+id/consent_decline_button" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            android:text="Decline" />
+    </LinearLayout>
+</ScrollView>

@@ -96,11 +96,142 @@ android {
 }
 
 dependencies {
-    implementation "one.empty3.libs:commons-mp:0.0.8"
-    implementation("one.empty3:empty3-library-mp:2025.1.26")
+    implementation "one.empty3.libs:commons-mp:0.0.9"
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }
+
+
+
+
+
+signing {
+    def signingKey = load.get("signing.keyId")
+    def signingPassword = load.get("signing.password")
+
+    useGpgCmd()
+    //useInMemoryPgpKeys(signingKey, signingPassword)
+
+    //sign publishing.publications
+    //sign configurations.archives
+}
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'one.empty3.libs'
+            artifactId = 'partial-android'
+            version = '0.0.11'
+            from components.java
+            project.tasks.withType(Sign) {
+                signatures.all {
+
+                }
+            }
+
+            // The pom can be enriched as usual
+            pom {
+                name = 'partial-desktop'
+                description = 'Adaptative class for Java Desktop/Android app . Android version'
+                packaging 'jar'
+                url = "https://github.com/manuelddahmen/partial-android"
+                version '0.0.11'
+                inceptionYear = '2024'
+                licenses {
+                    license {
+                        name = "Apache version 2"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
+                    }
+                }
+
+                scm {
+
+                    url = "https://github.com/manuelddahmen/partial-android"
+                    connection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+                    developerConnection = "scm:git:https://github.com/manuelddahmen/partial-android.git"
+
+                }
+                developers {
+                    developer {
+                        email = "manuel.dahmen@gmx.com"
+                        name = "Manuel Daniel Dahmen"
+
+                        url = "https://empty3.one"
+                        id = "manuelddahmen"
+                    }
+                }
+
+            }
+        }
+    }
+
+    repositories {
+        /*  maven {
+              name = "JetBrainsSpaceEmpty3"
+              url = "https://maven.pkg.jetbrains.space/empty3/p/empty3/maven/maven"
+              credentials {
+                  // Automation has a special account for authentication in Space
+                  // account credentials are accessible via env vars
+                  username = load.get("spaceUsername")
+                  password = load.get("spacePassword")
+              }
+
+          }*/
+        /*maven {
+            name = "OSSRH"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = load.get("ossrhUsername")
+                password = load.get("ossrhPassword")
+            }
+
+        }*/
+/*
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/manuelddahmen/empty3_miror")
+            credentials {
+                username = load.get("GITHUB_ACTOR")
+                password = load.get("GITHUB_TOKEN")
+            }
+        }*/
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = uri("https://repo.maven.apache.org/maven2/")
+    }
+    maven {
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
+    maven {
+        url = uri("https://repository.sonatype.org/content/groups/public/")
+    }
+    maven {
+        url = uri("https://mvnrepository.com/")
+    }
+    maven {
+        url = uri("https://maven.scijava.org/content/repositories/public/")
+    }
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
+    maven {
+        url "https://maven.jzy3d.org/releases/"
+    }
+    maven {
+        url "https://www.jetbrains.com/intellij-repository/releases"
+    }
+    flatDir dirs: "${rootDir}/lib"
+}
+
