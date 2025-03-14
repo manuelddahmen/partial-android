@@ -68,4 +68,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = 'partial-android'
-include ':partial-android'
+include 'partial-android'
