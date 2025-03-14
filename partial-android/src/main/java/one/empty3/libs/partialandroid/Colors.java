@@ -1,4 +1,4 @@
-package empty3.libs.partialandroid;
+package one.empty3.libs.partialandroid;
 
 import android.graphics.Paint;
 import android.graphics.Canvas;
