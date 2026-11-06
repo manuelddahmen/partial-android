@@ -1,8 +1,8 @@
-# 1. Build & stage release AAR, Sources JAR, Javadoc JAR, and GPG signatures
-./gradlew :partialandroid:publishReleasePublicationToStagingRepository
+REM # 1. Build & stage release AAR, Sources JAR, Javadoc JAR, and GPG signatures
+call ./gradlew :partialandroid:publishReleasePublicationToStagingRepository
 
-# 2. Verify JReleaser deployment configuration
-./gradlew jreleaserConfig
+REM 2. Verify JReleaser deployment configuration
+call ./gradlew jreleaserConfig
 
-# 3. Deploy to Maven Central via JReleaser
-./gradlew jreleaserDeploy
+REM  3. Deploy to Maven Central via JReleaser
+call ./gradlew jreleaserDeploy

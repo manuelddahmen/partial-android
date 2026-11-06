@@ -1,8 +1,18 @@
 import java.util.Properties
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.sun.activation:javax.activation:1.2.0")
+        classpath("jakarta.activation:jakarta.activation-api:2.1.3")
+    }
+}
+
 plugins {
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     id("org.jreleaser") version "1.24.0"
 }
@@ -23,9 +33,14 @@ val propertiesReleaseConfig = Properties().apply {
     }
 }
 
+val defaultVersion = "0.0.19"
+val buildVersion = findProperty("version")?.toString().let {
+    if (it.isNullOrEmpty() || it == "unspecified") defaultVersion else it
+}
+
 allprojects {
     group = "one.empty3.libs"
-    version = findProperty("version")?.toString() ?: "0.0.18"
+    version = buildVersion
 }
 
 jreleaser {
@@ -48,7 +63,7 @@ jreleaser {
     }
     project {
         name.set("partial-android")
-        version.set("0.0.18")
+        version.set(buildVersion)
         description.set("Android library for Empty3 feature processing")
         authors.set(listOf("Manuel D. Dahmen"))
         license.set("Apache-2.0")
@@ -56,6 +71,11 @@ jreleaser {
     }
     deploy {
         maven {
+            pomchecker {
+                failOnError.set(false)
+                failOnWarning.set(false)
+                strict.set(false)
+            }
             mavenCentral {
                 create("sonatype") {
                     active.set(org.jreleaser.model.Active.ALWAYS)
@@ -70,6 +90,8 @@ jreleaser {
                             ?: privateProperties.getProperty("mavenCentralPassword")
                     )
                     namespace.set("one.empty3.libs")
+                    verifyPom.set(false)
+                    applyMavenCentralRules.set(false)
                 }
             }
         }

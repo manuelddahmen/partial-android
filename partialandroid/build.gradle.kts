@@ -15,7 +15,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     `maven-publish`
     signing
@@ -37,8 +36,13 @@ val propertiesReleaseConfig = Properties().apply {
     }
 }
 
+val defaultVersion = "0.0.19"
+val buildVersion = findProperty("version")?.toString().let {
+    if (it.isNullOrEmpty() || it == "unspecified") defaultVersion else it
+}
+
 group = "one.empty3.libs"
-version = findProperty("version")?.toString() ?: "0.0.18"
+version = buildVersion
 
 android {
     namespace = "one.empty3.libs"
@@ -62,12 +66,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
-    lint {
-        targetSdk = 36
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 
     publishing {
@@ -128,7 +134,6 @@ configurations.configureEach {
     exclude(group = "xpp3", module = "xpp3")
     exclude(group = "one.empty3.libs", module = "partial-desktop")
 //    exclude(group = "one.empty3.libs", module = "partial-android")
-    exclude(group = "com.sun.activation", module = "javax.activation")
     exclude(group = "com.google.api.grpc", module = "proto-google-common-protos")
     exclude(module = "protobuf-java")
     exclude(group = "org.springframework", module = "spring-jcl")
@@ -145,7 +150,6 @@ configurations.configureEach {
     exclude(group = "org.bytedeco", module = "videoinput")
     exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
     exclude(group = "com.google.cloud.functions.invoker", module = "java-function-invoker")
-    exclude(group = "com.google.cloud.functions.invoker", module = "java-function-invoker:1.3.0")
     exclude(group = "com.google.firebase", module = "protolite-well-known-types")
     exclude(group = "com.google.firebase", module = "firebase-admin")
 }
@@ -180,7 +184,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = project.group.toString()
             artifactId = "partial-android"
-            version = project.version.toString()
+            version = buildVersion
 
             afterEvaluate {
                 from(components["release"])
@@ -261,5 +265,3 @@ signing {
         sign(publishing.publications)
     }
 }
-
-
