@@ -17,7 +17,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jreleaser") version "1.24.0"
     `maven-publish`
     signing
 }
