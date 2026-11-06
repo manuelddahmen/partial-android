@@ -1,0 +1,21 @@
+[versions]
+agp = "8.8.2"
+kotlin = "2.1.10"
+android-minSdk = "24"
+android-compileSdk = "36"
+
+[libraries]
+androidx-multidex = { module = "androidx.multidex:multidex", version = "2.0.1" }
+empty3-library-mp = { module = "one.empty3:empty3-library-mp", version = "2026.11.5" }
+commons-mp = { module = "one.empty3.libs:commons-mp", version = "0.0.17-17" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
+material = { module = "com.google.android.material:material", version = "1.12.0" }
+junit = { module = "junit:junit", version = "4.13.2" }
+androidx-test-rules = { module = "androidx.test:rules", version = "1.6.1" }
+androidx-test-ext-junit = { module = "androidx.test.ext:junit", version = "1.2.1" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version = "3.6.1" }
+
+[plugins]
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -1,0 +1,22 @@
+# Gradle build outputs and runtime cache / locks
+.gradle/
+build/
+**/build/
+*.apk
+*.aar
+*.aab
+
+# Local configuration
+local.properties
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Operating system files
+.DS_Store
+Thumbs.db
