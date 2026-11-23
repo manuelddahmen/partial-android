@@ -36,7 +36,7 @@ val propertiesReleaseConfig = Properties().apply {
     }
 }
 
-val defaultVersion = "0.0.19"
+val defaultVersion = "0.0.20"
 val buildVersion = findProperty("version")?.toString().let {
     if (it.isNullOrEmpty() || it == "unspecified") defaultVersion else it
 }
@@ -46,7 +46,7 @@ version = buildVersion
 
 android {
     namespace = "one.empty3.libs"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 24
@@ -66,8 +66,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 
     testOptions {
@@ -116,7 +116,7 @@ android {
     }
 
     lint {
-        targetSdk = 36
+        targetSdk = 37
         abortOnError = false
         checkReleaseBuilds = false
         disable += listOf("AccidentalOctal", "AndroidGradlePluginVersion", "AnnotationProcessorOnCompilePath", "BomWithoutPlatform", "UseOfBundledGooglePlayServices", "ChromeOsAbiSupport", "GradleCompatible", "CoreLibDesugaringV1", "DataBindingWithoutKapt", "GradleDependency", "GradleDeprecated", "GradleDeprecatedConfiguration", "OutdatedLibrary", "DevModeObsolete", "DuplicatePlatformClasses", "EditedTargetSdkVersion", "ExpiredTargetSdkVersion", "ExpiringTargetSdkVersion", "GradleGetter", "GradlePluginVersion", "HighAppVersionCode", "GradleIdeError", "InstantAppDeprecation", "JavaPluginLanguageLevel", "JcenterRepositoryObsolete", "KaptUsageInsteadOfKsp", "KtxExtensionAvailable", "LifecycleAnnotationProcessorWithJava8", "MinSdkTooLow", "SimilarGradleDependency", "NotInterpolated", "GradlePath", "PlaySdkIndexDeprecated", "PlaySdkIndexGenericIssues", "PlaySdkIndexNonCompliant", "PlaySdkIndexVulnerability", "GradleDynamicVersion", "NewerVersionAvailable", "R8GradualApi", "RiskyLibrary", "StringShouldBeInt", "UseTomlInstead", "OldTargetApi", "WrongThread", "WrongThreadInterprocedural")
@@ -163,10 +163,71 @@ dependencies {
         implementation("com.google.android.gms:play-services-basement:18.12.0")
     }
     implementation(libs.androidx.multidex)
-    implementation(libs.empty3.library.mp) {
+
+    implementation("one.empty3:empty3-library-mp:2026.11.5") {
         exclude(group = "one.empty3.libs", module = "partial-desktop")
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
+        exclude(group = "com.google.cloud.functions.invoker", module = "java-function-invoker")
+        exclude(group = "org.bytedeco", module = "javacv-platform")
+        exclude(group = "com.google.protobuf", module = "protobuf-java")
+        exclude(group = "com.google.api.grpc", module = "proto-google-common-protos")
         exclude(group = "io.grpc")
+        exclude(group = "com.squareup.okhttp3")
+        // --- Media and UI Libraries (Not for Android) ---
+        exclude(group = "org.jcodec", module = "jcodec-javase")
+        exclude(group = "com.miglayout", module = "miglayout")
+        exclude(group = "xom", module = "xom")
+        exclude(group = "com.jgoodies", module = "jgoodies-common")
+        exclude(group = "com.jgoodies", module = "jgoodies-forms")
+        exclude(group = "xerces", module = "xercesImpl")
+        exclude(group = "org.jdesktop", module = "beansbinding")
+        exclude(group = "com.github.sarxos", module = "webcam-capture")
+        exclude(group = "commons-net", module = "commons-net")
+
+        // --- XML Processing (Not for Android) ---
+        exclude(group = "org.jdom", module = "jdom2")
+        exclude(
+            group = "org.apache.servicemix.bundles",
+            module = "org.apache.servicemix.bundles.jdom"
+        )
+        exclude(group = "org.apache.santuario", module = "xmlsec")
+
+        // --- Full Google Cloud/Server-side Libraries (Not for Android) ---
+        exclude(group = "com.google.cloud", module = "libraries-bom")
+        exclude(group = "com.google.cloud", module = "google-cloud-vision")
+        exclude(group = "com.google.cloud", module = "google-cloud-storage")
+        exclude(group = "com.google.apis", module = "google-api-services-vision")
+        exclude(group = "com.google.auth", module = "google-auth-library-oauth2-http")
+        exclude(group = "com.google.auth", module = "google-auth-library-credentials")
+        exclude(group = "com.google.http-client", module = "google-http-client-jackson2")
+        exclude(group = "com.google.cloud.functions", module = "functions-framework-api")
+        exclude(group = "dev.openfunction.functions", module = "functions-framework-invoker")
+        exclude(group = "com.google.firebase", module = "firebase-admin")
+
+        // --- Other Conflicting/Unused Libraries ---
+        exclude(group = "com.google.guava", module = "guava")
+        // Prefer Android-specific guava if needed
+        exclude(group = "com.google.android.gms", module = "play-services-vision")
+        // Deprecated, use ML Kit
+        exclude(group = "com.google.code.gson", module = "gson")
+        exclude(group = "org.danilopianini", module = "gson-extras")
+        exclude(group = "com.google.code.gson", module = "gson-parent")
+        exclude(group = "org.bytedeco", module = "javacpp")
+        exclude(group = "org.bytedeco", module = "videoinput")
+        exclude(group = "org.bytedeco", module = "opencv")
+        exclude(group = "org.bytedeco", module = "tesseract")
+        exclude(group = "org.bytedeco", module = "openblas")
+        exclude(group = "org.bytedeco", module = "librealsense2")
+        exclude(group = "org.bytedeco", module = "ffmpeg")
+        exclude(group = "org.bytedeco", module = "javacpp-platform")
+        exclude(group = "org.bytedeco", module = "opencv-platform")
+        exclude(group = "org.bytedeco", module = "ffmpeg-platform")
+        exclude(group = "org.bytedeco", module = "tesseract-platform")
+        exclude(group = "org.bytedeco", module = "openblas-platform")
+        exclude(group = "org.bytedeco", module = "librealsense2-platform")
+        exclude(group = "org.bytedeco", module = "leptonica")
     }
+
     implementation(libs.commons.mp) {
         exclude(group = "io.grpc")
     }

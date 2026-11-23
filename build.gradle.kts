@@ -33,7 +33,7 @@ val propertiesReleaseConfig = Properties().apply {
     }
 }
 
-val defaultVersion = "0.0.19"
+val defaultVersion = "0.0.21"
 val buildVersion = findProperty("version")?.toString().let {
     if (it.isNullOrEmpty() || it == "unspecified") defaultVersion else it
 }

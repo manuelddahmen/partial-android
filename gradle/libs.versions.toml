@@ -6,7 +6,7 @@ android-compileSdk = "37"
 
 [libraries]
 androidx-multidex = { module = "androidx.multidex:multidex", version = "2.0.1" }
-empty3-library-mp = { module = "one.empty3:empty3-library-mp", version = "2026.11.5" }
+empty3-library-mp = { module = "one.empty3:empty3-library-mp", version = "2026.11.14" }
 commons-mp = { module = "one.empty3.libs:commons-mp", version = "0.0.17-17" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.0" }
 material = { module = "com.google.android.material:material", version = "1.12.0" }
